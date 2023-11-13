@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  message:
+    image: "rabbitmq:3-management-alpine"
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - message_data:/var/lib/rabbitmq/
+      - message_log:/var/log/rabbitmq/
+    networks:
+      - pat
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - pat
+  payment:
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/payment?ssl=false&authSource=admin
+      - RABBITMQ_URI=amqp://guest:guest@message:5672
+    depends_on:
+      - mongodb
+      - message
+    networks:
+      - pat
+networks:
+  pat:
+volumes:
+  message_data:
+  message_log:
+  mongodb_data:
