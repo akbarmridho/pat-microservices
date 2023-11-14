@@ -1,15 +1,10 @@
-import {pgTable, serial, timestamp, unique, varchar} from 'drizzle-orm/pg-core';
+import {createId} from '@paralleldrive/cuid2';
+import {pgTable, text, timestamp} from 'drizzle-orm/pg-core';
 
-export const users = pgTable(
-  'users',
-  {
-    id: serial('id').primaryKey(),
-    username: varchar('username', {length: 255}).notNull(),
-    name: varchar('name', {length: 255}).notNull(),
-    password: varchar('password', {length: 255}).notNull(),
-    createdAt: timestamp('created_at', {withTimezone: true}).defaultNow(),
-  },
-  users => ({
-    usernameUniqueIdx: unique('username_unique_idx').on(users.username),
-  })
-);
+export const users = pgTable('users', {
+  id: text('id').$defaultFn(createId).primaryKey(),
+  username: text('username').notNull().unique(),
+  name: text('name').notNull(),
+  password: text('password').notNull(),
+  createdAt: timestamp('created_at', {withTimezone: true}).defaultNow(),
+});

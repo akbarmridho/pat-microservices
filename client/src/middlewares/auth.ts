@@ -1,6 +1,6 @@
 import {type NextFunction, type Request, type Response} from 'express';
 import {expressjwt} from 'express-jwt';
-import {getSecret, JWT_ALGORITHM} from '../config/jwt';
+import {env} from '../config/env';
 
 export const requireAuthenticated = (
   request: Request,
@@ -8,8 +8,8 @@ export const requireAuthenticated = (
   next: NextFunction
 ): void => {
   expressjwt({
-    secret: getSecret(),
-    algorithms: [JWT_ALGORITHM],
+    secret: env.JWT_SECRET,
+    algorithms: [env.JWT_ALGORITHM],
     getToken: (req): string | undefined => {
       if (req.cookies.access_token !== undefined) {
         return req.cookies.access_token;
