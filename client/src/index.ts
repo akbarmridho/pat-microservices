@@ -1,14 +1,12 @@
 import cookieParser from 'cookie-parser';
 import {migrate} from 'drizzle-orm/postgres-js/migrator';
 import express from 'express';
+import {attachRouting} from 'express-zod-api';
 import helmet from 'helmet';
-import morgan from 'morgan';
-import {pageNotFound} from './controllers/pageNotFound';
+import {env} from './config/env';
+import {app, config} from './config/server';
 import {db, postgresClient} from './database/db';
-import {errorHandler} from './middlewares/errorHandler';
-import {unauthorizedErrorHandler} from './middlewares/unauthorizedErrorHandler';
-import {validationErrorHandler} from './middlewares/validationErrorHandler';
-import helloRouter from './routes/hello';
+import {routing} from './routes';
 
 require('express-async-errors');
 
@@ -18,46 +16,22 @@ async function main() {
     migrationsFolder: 'drizzle',
   });
 
-  const app = express();
-  const port: number =
-    process.env.PORT === undefined ? 3000 : parseInt(process.env.PORT);
-
   app.disable('x-powered-by');
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({extended: true}));
   app.use(cookieParser());
-
-  app.use(
-    morgan('combined', {
-      skip: (req, res): boolean => {
-        if (process.env.NODE_ENV === 'production') {
-          if (res.statusCode < 400) {
-            return true;
-          }
-        }
-
-        return false;
-      },
-    })
-  );
+  const {notFoundHandler} = attachRouting(config, routing);
 
   app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 
-  app.use('/test', helloRouter);
-
   // not found handler
-  app.use(pageNotFound);
+  app.use(notFoundHandler);
 
-  // error handlers
-  app.use(unauthorizedErrorHandler);
-  app.use(validationErrorHandler);
-  app.use(errorHandler);
-
-  const server = app.listen(port, () => {
-    console.log(`Service listening on port ${port}`);
+  const server = app.listen(env.PORT, () => {
+    console.log(`Service listening on port ${env.PORT}`);
   });
 
   process.on('SIGINT', () => {

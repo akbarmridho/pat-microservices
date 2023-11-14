@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Example API
+  version: 1.0.0
+paths:
+  /api/hello:
+    get:
+      operationId: hello
+      responses:
+        "200":
+          description: GET /api/hello Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                      - message
+                  success:
+                    type: boolean
+                    enum:
+                      - true
+                required:
+                  - data
+                  - success
+        "400":
+          description: GET /api/hello Error response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - oneOf:
+                      - type: object
+                        properties:
+                          message:
+                            type: string
+                        required:
+                          - message
+                      - type: object
+                        properties:
+                          messages:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                field:
+                                  type: string
+                                message:
+                                  type: string
+                              required:
+                                - field
+                                - message
+                        required:
+                          - messages
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        enum:
+                          - false
+                    required:
+                      - success
+components:
+  schemas: {}
+  responses: {}
+  parameters: {}
+  examples: {}
+  requestBodies: {}
+  headers: {}
+  securitySchemes: {}
+  links: {}
+  callbacks: {}
+tags: []
+servers:
+  - url: http://localhost:3000
