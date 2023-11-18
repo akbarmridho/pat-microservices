@@ -41,9 +41,22 @@ services:
       - message
     networks:
       - pat
+  postgresql:
+    image: postgres:14-alpine
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpassword}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - pat
 networks:
   pat:
 volumes:
   message_data:
   message_log:
   mongodb_data:
+  postgres:
