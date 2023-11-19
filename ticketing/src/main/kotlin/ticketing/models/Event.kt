@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 @Serializable
-data class Event(val id: Int, val title: String, val description: String, val price: Int)
+data class Event(val id: Int, val title: String, val description: String, val price: Int, var seats: List<Seat>? = null)
 
 
 object Events : IntIdTable() {

@@ -1,2 +1,19 @@
 GET http://localhost:8080/events
 Accept: application/json
+
+###
+
+GET http://localhost:8080/events/2
+Accept: application/json
+
+###
+
+POST http://localhost:8080/events
+Content-Type: application/json
+
+{
+  "title": "TwoSet Violin World Tour - Jakarta",
+  "description": "Uwooth",
+  "price": 1000000,
+  "seatCount": 10
+}
