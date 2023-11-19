@@ -1,23 +1,35 @@
 package ticketing.models
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
-@Serializable
+
 enum class SeatStatus(val status: String) {
     Open("OPEN"),
     Ongoing("ONGOING"),
     Booked("BOOKED")
 }
 
-data class Seat(val id: Int, val eventId: Int, val seatNumber: Int, val status: SeatStatus)
+@Serializable
+data class Seat(val id: Int, val seatNumber: Int, val status: SeatStatus)
 
-object Seats : Table() {
-    val id = integer("id").autoIncrement()
-    val eventId = reference("event_id", Events.id).isNotNull()
-    val seatNumber = integer("seat_number").isNotNull()
-    val status = enumerationByName("status", 10, SeatStatus::class).default(SeatStatus.Open).isNotNull()
+object Seats : IntIdTable() {
+    val event = reference("event_id", Events)
+    val seatNumber = integer("seat_number")
+    val status = enumerationByName("status", 10, SeatStatus::class).default(SeatStatus.Open)
+}
 
-    override val primaryKey = PrimaryKey(id)
+class SeatDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<SeatDao>(Seats)
+
+    var seatNumber by Seats.seatNumber
+    var status by Seats.status
+    var event by EventDao referencedOn Seats.event
+
+    fun toModel(): Seat {
+        return Seat(id.value, seatNumber, status)
+    }
 }
