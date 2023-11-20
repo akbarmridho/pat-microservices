@@ -12,6 +12,11 @@ services:
       - message_log:/var/log/rabbitmq/
     networks:
       - pat
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   mongodb:
     image: mongo:latest
     restart: unless-stopped
@@ -37,8 +42,10 @@ services:
       - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/payment?ssl=false&authSource=admin
       - RABBITMQ_URI=amqp://guest:guest@message:5672
     depends_on:
-      - mongodb
-      - message
+      mongodb:
+        condition: service_started
+      message:
+        condition: service_healthy
     networks:
       - pat
   postgresql:
