@@ -93,6 +93,29 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
       tags:
         - auth
+    put:
+      operationId: PutApiAuthUser
+      responses:
+        "200":
+          description: PUT /api/auth/user Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PutApiAuthUserSuccessfulResponse"
+        "400":
+          description: PUT /api/auth/user Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - auth
+      requestBody:
+        description: PUT /api/auth/user request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutApiAuthUserRequestBody"
 components:
   schemas:
     PostApiAuthLoginSuccessfulResponse:
@@ -183,7 +206,7 @@ components:
           properties:
             username:
               type: string
-              minLength: 5
+              minLength: 4
               maxLength: 20
               pattern: /^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
             password:
@@ -245,6 +268,52 @@ components:
       required:
         - data
         - success
+    PutApiAuthUserSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            username:
+              type: string
+          required:
+            - id
+            - name
+            - username
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PutApiAuthUserRequestBody:
+      allOf:
+        - allOf:
+            - allOf:
+                - type: object
+                  properties: {}
+                - type: object
+                  properties: {}
+            - type: object
+              properties: {}
+        - type: object
+          properties:
+            name:
+              type: string
+              minLength: 3
+            username:
+              type: string
+              minLength: 4
+              maxLength: 20
+              pattern: /^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+          required:
+            - name
+            - username
   responses: {}
   parameters: {}
   examples: {}

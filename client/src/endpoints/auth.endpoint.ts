@@ -4,7 +4,10 @@ import {StatusCodes} from 'http-status-codes';
 import {db} from 'src/database/db';
 import {first, firstSure} from 'src/database/helper';
 import {users} from 'src/database/schema';
-import {authOptEndpointsFactory} from 'src/factories/auth';
+import {
+  authOptEndpointsFactory,
+  authReqEndpointsFactory,
+} from 'src/factories/auth';
 import {baseEndpointsFactory} from 'src/factories/base';
 import {LoginRequest, PasswordType, UsernameType} from 'src/types/auth';
 import {
@@ -113,5 +116,35 @@ export const meEndpoint = authOptEndpointsFactory.build({
   }),
   handler: async ({options: {user}}) => {
     return {user: user ?? null};
+  },
+});
+
+export const updateUserEndpoint = authReqEndpointsFactory.build({
+  method: 'put',
+  tag: 'auth',
+  input: z.object({
+    name: z.string().min(3, 'Name must be at least 3 characters long'),
+    username: UsernameType,
+  }),
+  output: z.object({
+    id: z.string(),
+    name: z.string(),
+    username: z.string(),
+  }),
+  async handler({input, options: {user}}) {
+    const updatedUser = await db
+      .update(users)
+      .set({
+        name: input.name,
+        username: input.username,
+      })
+      .where(eq(users.id, user.id))
+      .returning({
+        id: users.id,
+        name: users.name,
+        username: users.username,
+      })
+      .then(firstSure);
+    return updatedUser;
   },
 });

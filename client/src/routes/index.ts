@@ -1,9 +1,10 @@
-import {Routing} from 'express-zod-api';
+import {DependsOnMethod, Routing} from 'express-zod-api';
 import {
   loginEndpoint,
   logoutEndpoint,
   meEndpoint,
   registerEndpoint,
+  updateUserEndpoint,
 } from 'src/endpoints/auth.endpoint';
 
 export const routing: Routing = {
@@ -12,7 +13,7 @@ export const routing: Routing = {
       login: loginEndpoint,
       register: registerEndpoint,
       logout: logoutEndpoint,
-      user: meEndpoint,
+      user: new DependsOnMethod({get: meEndpoint, put: updateUserEndpoint}),
     },
   },
 };

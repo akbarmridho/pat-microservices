@@ -12,6 +12,7 @@ export const UsernameType = z
     /^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/,
     'Username hanya boleh memiliki huruf, angka, simbol _ dan .'
   );
+
 export const PasswordType = z
   .string()
   .min(8, 'Password minimal 8 karakter')
