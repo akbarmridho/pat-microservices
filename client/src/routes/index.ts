@@ -1,8 +1,18 @@
 import {Routing} from 'express-zod-api';
-import {helloEndpoint} from 'src/endpoints/hello.endpoint';
+import {
+  loginEndpoint,
+  logoutEndpoint,
+  meEndpoint,
+  registerEndpoint,
+} from 'src/endpoints/auth.endpoint';
 
 export const routing: Routing = {
   api: {
-    hello: helloEndpoint,
+    auth: {
+      login: loginEndpoint,
+      register: registerEndpoint,
+      logout: logoutEndpoint,
+      user: meEndpoint,
+    },
   },
 };

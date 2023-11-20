@@ -1,21 +1,18 @@
 import cookieParser from 'cookie-parser';
-import {migrate} from 'drizzle-orm/postgres-js/migrator';
 import express from 'express';
 import {attachRouting} from 'express-zod-api';
+import fs from 'fs';
 import helmet from 'helmet';
-import {env} from './config/env';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yaml';
+import {env, isDev} from './config/env';
 import {app, config} from './config/server';
-import {db, postgresClient} from './database/db';
+import {postgresClient} from './database/db';
 import {routing} from './routes';
 
 require('express-async-errors');
 
 async function main() {
-  // migrate db
-  await migrate(db, {
-    migrationsFolder: 'drizzle',
-  });
-
   app.disable('x-powered-by');
   app.use(helmet());
   app.use(express.json());
@@ -23,9 +20,11 @@ async function main() {
   app.use(cookieParser());
   const {notFoundHandler} = attachRouting(config, routing);
 
-  app.get('/', (req, res) => {
-    res.send('Hello World!');
-  });
+  if (isDev) {
+    const file = fs.readFileSync('./docs/openapi.swagger.yaml', 'utf8');
+    const swaggerDocument = YAML.parse(file);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  }
 
   // not found handler
   app.use(notFoundHandler);

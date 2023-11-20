@@ -1,5 +1,6 @@
 import {
   EndpointsFactory,
+  createMiddleware,
   createResultHandler,
   defaultEndpointsFactory,
   getStatusCodeFromError,
@@ -13,6 +14,13 @@ const FieldSchema = z.object({
   message: z.string(),
 });
 
+const ErrorSchema = z
+  .union([
+    z.object({message: z.string()}),
+    z.object({messages: z.array(FieldSchema)}),
+  ])
+  .and(z.object({success: z.literal(false)}));
+
 const resultHandler = createResultHandler({
   getPositiveResponse(output) {
     return {
@@ -22,12 +30,7 @@ const resultHandler = createResultHandler({
   },
   getNegativeResponse() {
     return {
-      schema: z
-        .union([
-          z.object({message: z.string()}),
-          z.object({messages: z.array(FieldSchema)}),
-        ])
-        .and(z.object({success: z.literal(false)})),
+      schema: ErrorSchema,
       mimeType: 'application/json',
     };
   },
@@ -65,4 +68,13 @@ const resultHandler = createResultHandler({
   },
 });
 
-export const baseEndpointsFactory = new EndpointsFactory(resultHandler);
+export const baseEndpointsFactory = new EndpointsFactory(
+  resultHandler
+).addMiddleware(
+  createMiddleware({
+    input: z.object({}),
+    async middleware({request, response}) {
+      return {req: request, res: response};
+    },
+  })
+);

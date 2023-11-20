@@ -3,70 +3,248 @@ info:
   title: Example API
   version: 1.0.0
 paths:
-  /api/hello:
-    get:
-      operationId: hello
+  /api/auth/login:
+    post:
+      operationId: PostApiAuthLogin
       responses:
         "200":
-          description: GET /api/hello Successful response
+          description: POST /api/auth/login Successful response
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
+                $ref: "#/components/schemas/PostApiAuthLoginSuccessfulResponse"
+        "400":
+          description: POST /api/auth/login Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - auth
+      requestBody:
+        description: POST /api/auth/login request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostApiAuthLoginRequestBody"
+  /api/auth/register:
+    post:
+      operationId: PostApiAuthRegister
+      responses:
+        "200":
+          description: POST /api/auth/register Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostApiAuthRegisterSuccessfulResponse"
+        "400":
+          description: POST /api/auth/register Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - auth
+      requestBody:
+        description: POST /api/auth/register request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostApiAuthRegisterRequestBody"
+  /api/auth/logout:
+    post:
+      operationId: PostApiAuthLogout
+      responses:
+        "200":
+          description: POST /api/auth/logout Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostApiAuthLogoutSuccessfulResponse"
+        "400":
+          description: POST /api/auth/logout Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - auth
+      requestBody:
+        description: POST /api/auth/logout request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostApiAuthLogoutRequestBody"
+  /api/auth/user:
+    get:
+      operationId: GetApiAuthUser
+      responses:
+        "200":
+          description: GET /api/auth/user Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetApiAuthUserSuccessfulResponse"
+        "400":
+          description: GET /api/auth/user Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - auth
+components:
+  schemas:
+    PostApiAuthLoginSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    ErrorResponse:
+      allOf:
+        - oneOf:
+            - type: object
+              properties:
+                message:
+                  type: string
+              required:
+                - message
+            - type: object
+              properties:
+                messages:
+                  type: array
+                  items:
                     type: object
                     properties:
+                      field:
+                        type: string
                       message:
                         type: string
                     required:
+                      - field
                       - message
-                  success:
-                    type: boolean
-                    enum:
-                      - true
-                required:
-                  - data
-                  - success
-        "400":
-          description: GET /api/hello Error response
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - oneOf:
-                      - type: object
-                        properties:
-                          message:
-                            type: string
-                        required:
-                          - message
-                      - type: object
-                        properties:
-                          messages:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                field:
-                                  type: string
-                                message:
-                                  type: string
-                              required:
-                                - field
-                                - message
-                        required:
-                          - messages
-                  - type: object
-                    properties:
-                      success:
-                        type: boolean
-                        enum:
-                          - false
-                    required:
-                      - success
-components:
-  schemas: {}
+              required:
+                - messages
+        - type: object
+          properties:
+            success:
+              type: boolean
+              enum:
+                - false
+          required:
+            - success
+    PostApiAuthLoginRequestBody:
+      allOf:
+        - type: object
+          properties: {}
+        - type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+          required:
+            - username
+            - password
+    PostApiAuthRegisterSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiAuthRegisterRequestBody:
+      allOf:
+        - type: object
+          properties: {}
+        - type: object
+          properties:
+            username:
+              type: string
+              minLength: 5
+              maxLength: 20
+              pattern: /^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+            password:
+              type: string
+              minLength: 8
+              maxLength: 127
+            name:
+              type: string
+              minLength: 3
+          required:
+            - username
+            - password
+            - name
+    PostApiAuthLogoutSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: {}
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiAuthLogoutRequestBody:
+      allOf:
+        - type: object
+          properties: {}
+        - type: object
+          properties: {}
+    GetApiAuthUserSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            user:
+              nullable: true
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                username:
+                  type: string
+              required:
+                - id
+                - name
+                - username
+          required:
+            - user
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
   responses: {}
   parameters: {}
   examples: {}

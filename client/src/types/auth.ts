@@ -6,7 +6,7 @@ export const UsernameType = z
   .string()
   .toLowerCase()
   .trim()
-  .min(5)
+  .min(4)
   .max(20)
   .regex(
     /^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/,

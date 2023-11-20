@@ -55,9 +55,11 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpassword}
+      POSTGRES_MULTIPLE_DATABASES: client,ticketing
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+      - ./postgres_multiple_databases.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
     networks:
       - pat
 networks:

@@ -1,4 +1,4 @@
-import {IOSchema, createMiddleware} from 'express-zod-api';
+import {createMiddleware} from 'express-zod-api';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import {db} from 'src/database/db';
@@ -36,37 +36,16 @@ export const authMiddleware = createMiddleware({
   },
 });
 
-export const authRequiredMiddleware = createMiddleware<
-  IOSchema<'strip'>,
-  {
-    user:
-      | {
-          id: string;
-          name: string;
-          username: string;
-        }
-      | undefined;
-  },
-  {
-    user: {
-      id: string;
-      name: string;
-      username: string;
-    };
-  },
-  string
->({
-  input: z.object({}),
-  async middleware(params) {
-    if (!params.options.user) {
-      throw createHttpError(401, 'Unauthorized');
-    }
-    return {user: params.options.user};
-  },
-});
-
 export const authOptEndpointsFactory =
   baseEndpointsFactory.addMiddleware(authMiddleware);
 export const authReqEndpointsFactory = authOptEndpointsFactory.addMiddleware(
-  authRequiredMiddleware
+  createMiddleware({
+    input: z.object({}),
+    async middleware(params) {
+      if (!params.options.user) {
+        throw createHttpError(401, 'Unauthorized');
+      }
+      return {user: params.options.user};
+    },
+  })
 );
