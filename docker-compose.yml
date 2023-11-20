@@ -2,7 +2,7 @@ version: "3"
 
 services:
   message:
-    image: "rabbitmq:3-management-alpine"
+    image: heidiks/rabbitmq-delayed-message-exchange:latest
     restart: unless-stopped
     ports:
       - 5672:5672
@@ -44,7 +44,7 @@ services:
   postgresql:
     image: postgres:14-alpine
     ports:
-      - '5433:5432'
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pgpassword}
