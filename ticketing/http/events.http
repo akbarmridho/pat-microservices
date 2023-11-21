@@ -1,14 +1,14 @@
-GET http://localhost:8080/events
+GET http://localhost:8000/events
 Accept: application/json
 
 ###
 
-GET http://localhost:8080/events/2
+GET http://localhost:8000/events/1
 Accept: application/json
 
 ###
 
-POST http://localhost:8080/events
+POST http://localhost:8000/events
 Content-Type: application/json
 
 {

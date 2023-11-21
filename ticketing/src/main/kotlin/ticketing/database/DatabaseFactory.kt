@@ -7,16 +7,18 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import ticketing.config.config
+import ticketing.config.config.dbPassword
+import ticketing.config.config.dbUsername
+import ticketing.config.config.driverClassName
+import ticketing.config.config.jdbcUrl
 import ticketing.models.Bookings
 import ticketing.models.Events
 import ticketing.models.Seats
 
 object DatabaseFactory {
     fun init() {
-        val driverClassName = "org.postgresql.Driver"
-        val jdbcUrl = "jdbc:postgresql://localhost:5433/postgres"
-
-        Database.connect(createHikariDataSource(url = jdbcUrl, driver = driverClassName))
+        Database.connect(createHikariDataSource())
 
         transaction {
             SchemaUtils.create(Events)
@@ -25,17 +27,14 @@ object DatabaseFactory {
         }
     }
 
-    private fun createHikariDataSource(
-        url: String,
-        driver: String
-    ) = HikariDataSource(HikariConfig().apply {
-        driverClassName = driver
-        jdbcUrl = url
+    private fun createHikariDataSource() = HikariDataSource(HikariConfig().apply {
+        driverClassName = config.driverClassName
+        jdbcUrl = config.jdbcUrl
         maximumPoolSize = 4
         isAutoCommit = false
         transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-        username = "postgres"
-        password = "pgpassword"
+        username = dbUsername
+        password = dbPassword
         validate()
     })
 

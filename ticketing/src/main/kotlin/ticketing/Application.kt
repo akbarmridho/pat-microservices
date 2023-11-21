@@ -13,16 +13,23 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import ticketing.database.DatabaseFactory
+import ticketing.database.MessagingFactory
 import ticketing.handlers.bookings
 import ticketing.service.EventService
 import ticketing.handlers.events
 import ticketing.service.BookingService
+import ticketing.workers.CancelBookingProcessor
 
 fun main() {
+    DatabaseFactory.init()
+    MessagingFactory.queueDeclare()
+
+    CancelBookingProcessor.spawn()
+
     val nCores = 4
 
     embeddedServer(Netty,
-        port = 8080,
+        port = 8000,
         host = "0.0.0.0",
         watchPaths = listOf("classes"),
         module = Application::module,
@@ -39,8 +46,6 @@ fun main() {
 }
 
 fun Application.module() {
-    DatabaseFactory.init()
-
     install(ContentNegotiation) {
         json()
     }
@@ -75,7 +80,7 @@ fun Application.module() {
             call.respondText("Hello World!")
         }
 
-        events(eventService)
         bookings(bookingService)
+        events(eventService)
     }
 }

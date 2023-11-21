@@ -11,7 +11,7 @@ import ticketing.service.EventService
 import ticketing.dto.CreateEventRequest
 import ticketing.utils.PayloadData
 
-@Resource("events")
+@Resource("/events")
 class EventsRoute {
 
     @Resource("{id}")
