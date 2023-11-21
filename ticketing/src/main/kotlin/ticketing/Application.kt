@@ -3,7 +3,6 @@ package ticketing
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -14,11 +13,28 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import ticketing.database.DatabaseFactory
-import ticketing.database.EventService
+import ticketing.handlers.bookings
+import ticketing.service.EventService
 import ticketing.handlers.events
+import ticketing.service.BookingService
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", watchPaths = listOf("classes"), module = Application::module)
+    val nCores = 4
+
+    embeddedServer(Netty,
+        port = 8080,
+        host = "0.0.0.0",
+        watchPaths = listOf("classes"),
+        module = Application::module,
+        configure = {
+            // Specifies the minimum size of a thread pool used to process application calls
+            callGroupSize = nCores
+            // Specifies how many threads are used to accept new connections and start call processing
+            connectionGroupSize = nCores / 2
+            // Specifies size of the event group for processing connections, parsing messages and doing engine's internal work
+            workerGroupSize = nCores / 2
+        }
+    )
         .start(wait = true)
 }
 
@@ -52,6 +68,7 @@ fun Application.module() {
     }
 
     val eventService = EventService()
+    val bookingService = BookingService()
 
     routing {
         get("/") {
@@ -59,5 +76,6 @@ fun Application.module() {
         }
 
         events(eventService)
+        bookings(bookingService)
     }
 }

@@ -1,22 +1,11 @@
-package ticketing.database
+package ticketing.service
 
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.batchInsert
 import ticketing.database.DatabaseFactory.dbQuery
+import ticketing.dto.CreateEventRequest
 import ticketing.models.*
 
-@Serializable
-data class CreateEventRequest(val title: String, val description: String, val price: Int, val seatCount: Int) {
-    init {
-        require(price > 0) {
-            "Price must be greater than one"
-        }
-        require(seatCount > 0) {
-            "Seat count must be greater than one"
-        }
-    }
-}
 
 class EventService {
     suspend fun getAll(): List<Event> = dbQuery {
@@ -47,7 +36,7 @@ class EventService {
             this[Seats.event] = eventDao.id
             this[Seats.seatNumber] = seatNumber
         }
-        
+
         val event = eventDao.toModel()
 
         event.seats = SeatDao.find(Seats.event eq event.id).map { it.toModel() }

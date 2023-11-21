@@ -7,8 +7,8 @@ import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ticketing.database.CreateEventRequest
-import ticketing.database.EventService
+import ticketing.service.EventService
+import ticketing.dto.CreateEventRequest
 import ticketing.utils.PayloadData
 
 @Resource("events")
