@@ -146,9 +146,9 @@ func main() {
 			}
 
 			jsonData, _ := json.Marshal(map[string]interface{}{
-				"invoiceId": invoiceId.Hex(),
-				"status":    status,
-				failReason:  failReason,
+				"invoiceId":  invoiceId.Hex(),
+				"status":     status,
+				"failReason": failReason,
 			})
 
 			resp, err := http.Post(TICKET_WEBHOOK_URL, "application/json", bytes.NewBuffer(jsonData))

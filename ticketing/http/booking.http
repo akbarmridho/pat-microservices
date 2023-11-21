@@ -2,7 +2,12 @@ POST http://localhost:8000/bookings
 Content-Type: application/json
 
 {
-  "id": 1
+  "id": 5
 }
 
 ###
+
+POST http://localhost:8000/bookings/webhook
+Content-Type: application/json
+
+{"failReason":"","invoiceId":"655cd556d44f54a2c4f1de28","status":"success"}

@@ -1,6 +1,7 @@
 package ticketing.service
 
 import com.rabbitmq.client.Channel
+import com.rabbitmq.client.MessageProperties
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -15,6 +16,9 @@ import ticketing.dto.PaymentRequest
 import ticketing.models.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.update
+import ticketing.dto.PaymentConfirmRequest
 import ticketing.dto.PaymentResponse
 
 class FailedToGeneratePaymentException : Exception()
@@ -44,14 +48,14 @@ class BookingService {
         )
     }
 
-//    private fun dispatchBookingTask(bookingId: Int) {
-//        bookingChannel.basicPublish(
-//            "",
-//            BOOKING_TASK_QUEUE,
-//            MessageProperties.PERSISTENT_TEXT_PLAIN,
-//            bookingId.toString().toByteArray(charset("UTF-8"))
-//        )
-//    }
+    private fun dispatchFailedBookingTask(seatId: Int) {
+        cancelationChannel.basicPublish(
+            "",
+            CANCEL_BOOKING_TASK_QUEUE,
+            MessageProperties.PERSISTENT_TEXT_PLAIN,
+            seatId.toString().toByteArray(charset("UTF-8"))
+        )
+    }
 
     private suspend fun generatePayment(booking: BookingDao): PaymentResponse {
         try {
@@ -64,6 +68,22 @@ class BookingService {
             return response.body<PaymentResponse>()
         } catch (e: Exception) {
             throw FailedToGeneratePaymentException()
+        }
+    }
+
+    suspend fun confirm(payload: PaymentConfirmRequest) = dbQuery {
+        val booking = BookingDao.find(Bookings.invoiceId eq payload.invoiceId).limit(1).firstOrNull()
+
+        if (booking != null && booking.status == BookingStatus.InProcess) {
+            if (payload.status == "success") {
+                booking.status = BookingStatus.Success
+                booking.seat.status = SeatStatus.Booked
+            } else {
+                booking.status = BookingStatus.Failed
+                booking.seat.status = SeatStatus.Open
+                booking.failReason = payload.failReason
+                dispatchFailedBookingTask(booking.seat.id.value)
+            }
         }
     }
 
