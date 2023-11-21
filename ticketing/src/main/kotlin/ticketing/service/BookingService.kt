@@ -9,17 +9,14 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import ticketing.config.config.paymentServiceEndpoint
-import ticketing.dto.CreateBookingRequest
 import ticketing.database.DatabaseFactory.dbQuery
 import ticketing.database.MessagingFactory
-import ticketing.dto.PaymentRequest
 import ticketing.models.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.update
-import ticketing.dto.PaymentConfirmRequest
-import ticketing.dto.PaymentResponse
+import ticketing.dto.*
 
 class FailedToGeneratePaymentException : Exception()
 
@@ -68,6 +65,21 @@ class BookingService {
             return response.body<PaymentResponse>()
         } catch (e: Exception) {
             throw FailedToGeneratePaymentException()
+        }
+    }
+
+    suspend fun cancel(payload: CancelBookingRequest) = dbQuery {
+        val booking = BookingDao[payload.id]
+
+        if (booking.status != BookingStatus.Failed) {
+            // if status is in process or success
+            if (booking.status != BookingStatus.Queued) {
+                booking.seat.status = SeatStatus.Open
+                dispatchFailedBookingTask(booking.seat.id.value)
+            }
+
+            booking.status = BookingStatus.Failed
+            booking.failReason = "Cancelled by user"
         }
     }
 

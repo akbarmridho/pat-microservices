@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.resources.post
+import ticketing.dto.CancelBookingRequest
 import ticketing.dto.CreateBookingRequest
 import ticketing.dto.PaymentConfirmRequest
 import ticketing.service.BookingService
@@ -19,6 +20,9 @@ class BookingRoute {
 
     @Resource("webhook")
     class Webhook(val parent: BookingRoute = BookingRoute())
+
+    @Resource("cancel")
+    class Cancel(val parent: BookingRoute = BookingRoute())
 }
 
 fun Route.bookings(bookingService: BookingService) {
@@ -44,6 +48,14 @@ fun Route.bookings(bookingService: BookingService) {
         val payload = call.receive<PaymentConfirmRequest>()
 
         bookingService.confirm(payload)
+
+        call.respond(MessageData("Ok"))
+    }
+
+    post<BookingRoute.Cancel> {
+        val payload = call.receive<CancelBookingRequest>()
+
+        bookingService.cancel(payload)
 
         call.respond(MessageData("Ok"))
     }
