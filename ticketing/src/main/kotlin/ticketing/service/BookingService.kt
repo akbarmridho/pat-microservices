@@ -15,6 +15,7 @@ import ticketing.models.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.update
 import ticketing.dto.*
 
@@ -99,39 +100,43 @@ class BookingService {
         }
     }
 
+    suspend fun processQueueFromCancel(seatId: Int) = dbQuery {
+        val booking = BookingDao.find {
+            (Bookings.seat eq seatId) and (Bookings.status eq BookingStatus.Queued)
+        }.limit(1).firstOrNull()
+
+        if (booking != null) {
+            processQueue(booking)
+        }
+    }
+
+    private suspend fun processQueue(booking: BookingDao) {
+        if (booking.seat.status == SeatStatus.Open) {
+            try {
+                val payment = generatePayment(booking)
+
+                booking.status = BookingStatus.InProcess
+                booking.paymentUrl = payment.paymentUrl
+                booking.invoiceId = payment.invoiceId
+
+                booking.seat.status = SeatStatus.Ongoing
+            } catch (e: FailedToGeneratePaymentException) {
+                TransactionManager.current().rollback()
+                throw e
+            }
+        }
+    }
+
     suspend fun create(payload: CreateBookingRequest): Booking = dbQuery {
         val reservedSeat = SeatDao[payload.id]
 
-        when (reservedSeat.status) {
-            SeatStatus.Open -> {
-                val booking = BookingDao.new {
-                    seat = reservedSeat
-                    status = BookingStatus.InProcess
-                }
-
-                try {
-                    val payment = generatePayment(booking)
-
-                    booking.paymentUrl = payment.paymentUrl
-                    booking.invoiceId = payment.invoiceId
-
-                    booking.seat.status = SeatStatus.Ongoing
-
-                    booking.toModel()
-                } catch (e: FailedToGeneratePaymentException) {
-                    TransactionManager.current().rollback()
-                    throw e
-                }
-            }
-
-            else -> {
-                val booking = BookingDao.new {
-                    seat = reservedSeat
-                    status = BookingStatus.Queued
-                }
-
-                booking.toModel()
-            }
+        val booking = BookingDao.new {
+            seat = reservedSeat
+            status = BookingStatus.Queued
         }
+
+        processQueue(booking)
+
+        booking.toModel()
     }
 }

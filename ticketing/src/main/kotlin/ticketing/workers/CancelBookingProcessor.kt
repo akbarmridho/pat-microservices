@@ -4,12 +4,19 @@ import com.rabbitmq.client.AMQP
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
+import kotlinx.coroutines.*
 import ticketing.database.MessagingFactory
+import ticketing.dto.CreateBookingRequest
+import ticketing.models.BookingDao
+import ticketing.models.Bookings
 import ticketing.service.BookingService
 import java.io.IOException
 import kotlin.jvm.Throws
 
 class CancelBookingConsumer(channel: Channel) : DefaultConsumer(channel) {
+    val bookingService = BookingService()
+    val scope = CoroutineScope(Job() + Dispatchers.Main)
+
     @Throws(IOException::class)
     override fun handleDelivery(
         consumerTag: String,
@@ -19,9 +26,14 @@ class CancelBookingConsumer(channel: Channel) : DefaultConsumer(channel) {
     ) {
         val message = String(body, charset("UTF-8"))
 
-        println(" [x] Received '$message'")
-
-        channel.basicAck(envelope.deliveryTag, false)
+        scope.launch {
+            try {
+                bookingService.processQueueFromCancel(message.toInt())
+                channel.basicAck(envelope.deliveryTag, false)
+            } catch (_: Exception) {
+                println("Failed to process cancelled booking")
+            }
+        }
     }
 }
 
