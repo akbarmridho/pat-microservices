@@ -14,11 +14,16 @@ import ticketing.database.MessagingFactory
 import ticketing.models.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import ticketing.dto.*
+import java.time.Clock
+import java.util.Date
 
 class FailedToGeneratePaymentException : Exception()
 
@@ -86,6 +91,7 @@ class BookingService {
                 dispatchFailedBookingTask(booking.seat.id.value)
             }
 
+            booking.updatedAt = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.UTC)
             booking.status = BookingStatus.Failed
             booking.failReason = "Cancelled by user"
         }
@@ -95,6 +101,7 @@ class BookingService {
         val booking = BookingDao.find(Bookings.invoiceId eq payload.invoiceId).limit(1).firstOrNull()
 
         if (booking != null && booking.status == BookingStatus.InProcess) {
+            booking.updatedAt = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.UTC)
             if (payload.status == "success") {
                 booking.status = BookingStatus.Success
                 booking.seat.status = SeatStatus.Booked
@@ -125,6 +132,8 @@ class BookingService {
                 booking.status = BookingStatus.InProcess
                 booking.paymentUrl = payment.paymentUrl
                 booking.invoiceId = payment.invoiceId
+
+                booking.updatedAt = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.UTC)
 
                 booking.seat.status = SeatStatus.Ongoing
             } catch (e: FailedToGeneratePaymentException) {

@@ -2,7 +2,7 @@ POST http://localhost:8000/bookings
 Content-Type: application/json
 
 {
-  "id": 1
+  "id": 2
 }
 
 ###
@@ -18,12 +18,12 @@ POST http://localhost:8000/bookings/cancel
 Content-Type: application/json
 
 {
-  "id": 23
+  "id": 25
 }
 
 ###
 
-GET http://localhost:8000/bookings/23
+GET http://localhost:8000/bookings/25
 Accept: application/json
 
 ###
