@@ -16,6 +16,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import ticketing.dto.*
 
@@ -127,6 +128,12 @@ class BookingService {
         }
     }
 
+    suspend fun processNewQueue(bookingId: Int): Booking = dbQuery {
+        val booking = BookingDao[bookingId]
+        processQueue(booking)
+        booking.toModel()
+    }
+
     suspend fun create(payload: CreateBookingRequest): Booking = dbQuery {
         val reservedSeat = SeatDao[payload.id]
 
@@ -134,8 +141,6 @@ class BookingService {
             seat = reservedSeat
             status = BookingStatus.Queued
         }
-
-        processQueue(booking)
 
         booking.toModel()
     }

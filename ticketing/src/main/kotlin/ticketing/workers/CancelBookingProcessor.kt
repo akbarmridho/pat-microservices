@@ -6,16 +6,13 @@ import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
 import kotlinx.coroutines.*
 import ticketing.database.MessagingFactory
-import ticketing.dto.CreateBookingRequest
-import ticketing.models.BookingDao
-import ticketing.models.Bookings
 import ticketing.service.BookingService
 import java.io.IOException
 import kotlin.jvm.Throws
 
 class CancelBookingConsumer(channel: Channel) : DefaultConsumer(channel) {
     val bookingService = BookingService()
-    val scope = CoroutineScope(Job() + Dispatchers.Main)
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     @Throws(IOException::class)
     override fun handleDelivery(

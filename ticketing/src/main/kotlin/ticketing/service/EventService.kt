@@ -14,7 +14,7 @@ class EventService {
 
     suspend fun find(id: Int): Event = dbQuery {
         val event = EventDao[id].toModel()
-        event.seats = SeatDao.find(Seats.event eq id).map { it.toModel() }
+        event.seats = SeatDao.find(Seats.event eq id).sortedBy { it.seatNumber }.map { it.toModel() }
 
         event
     }

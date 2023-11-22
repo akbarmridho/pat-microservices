@@ -145,36 +145,41 @@ func main() {
 				continue
 			}
 
-			jsonData, _ := json.Marshal(map[string]interface{}{
-				"invoiceId":  invoiceId.Hex(),
-				"status":     status,
-				"failReason": failReason,
-			})
+			go func() {
+				// simulate payment processing
+				time.Sleep(2 * time.Second)
 
-			resp, err := http.Post(TICKET_WEBHOOK_URL, "application/json", bytes.NewBuffer(jsonData))
+				jsonData, _ := json.Marshal(map[string]interface{}{
+					"invoiceId":  invoiceId.Hex(),
+					"status":     status,
+					"failReason": failReason,
+				})
 
-			// if webhook call fails, requeue the message with 5 seconds delay
-			if err != nil || resp.StatusCode >= 300 {
-				models.UpdateWebhookStatus(db, invoiceId, "failed")
-				msg.Ack(false)
-				ch.PublishWithContext(
-					context.Background(),
-					"payment",
-					q.Name,
-					false,
-					false,
-					amqp.Publishing{
-						ContentType: "application/json",
-						Body:        jsonData,
-						Headers: amqp.Table{
-							"x-delay": 100,
+				resp, err := http.Post(TICKET_WEBHOOK_URL, "application/json", bytes.NewBuffer(jsonData))
+
+				// if webhook call fails, requeue the message with 5 seconds delay
+				if err != nil || resp.StatusCode >= 300 {
+					models.UpdateWebhookStatus(db, invoiceId, "failed")
+					msg.Ack(false)
+					ch.PublishWithContext(
+						context.Background(),
+						"payment",
+						q.Name,
+						false,
+						false,
+						amqp.Publishing{
+							ContentType: "application/json",
+							Body:        jsonData,
+							Headers: amqp.Table{
+								"x-delay": 100,
+							},
 						},
-					},
-				)
-			} else {
-				models.UpdateWebhookStatus(db, invoiceId, "success")
-				msg.Ack(false)
-			}
+					)
+				} else {
+					models.UpdateWebhookStatus(db, invoiceId, "success")
+					msg.Ack(false)
+				}
+			}()
 		}
 	}
 

@@ -43,6 +43,7 @@ services:
     environment:
       - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/payment?ssl=false&authSource=admin
       - RABBITMQ_URI=amqp://guest:guest@message:5672
+      - TICKET_WEBHOOK_URL=http://host.docker.internal:8000/bookings/webhook
     depends_on:
       mongodb:
         condition: service_started
@@ -64,8 +65,31 @@ services:
       - postgres:/data/postgres
     networks:
       - pat
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+  ticketing:
+    build:
+      context: ./ticketing
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - pat
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      message:
+        condition: service_healthy
+    environment:
+      JDBC_URL: jdbc:postgresql://host.docker.internal:5433/ticketing
+      JDBC_USERNAME: postgres
+      JDBC_PASSWORD: pgpassword
+      RMQ_HOST: host.docker.internal
+      PAYMENT_SERVICE_ENDPOINT: http://host.docker.internal:8080
 networks:
   pat:
+    driver: host
 volumes:
   message_data:
   message_log:

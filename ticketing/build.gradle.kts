@@ -47,6 +47,4 @@ dependencies {
     implementation("com.rabbitmq:amqp-client:5.20.0")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
     implementation("io.ktor:ktor-serialization-jackson:2.3.5")
-    testImplementation("io.ktor:ktor-server-tests-jvm")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

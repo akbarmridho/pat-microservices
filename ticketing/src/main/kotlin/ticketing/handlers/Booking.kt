@@ -36,7 +36,8 @@ fun Route.bookings(bookingService: BookingService) {
         } else {
 
             try {
-                val result = bookingService.create(payload)
+                val createdBooking = bookingService.create(payload)
+                val result = bookingService.processNewQueue(createdBooking.id)
                 call.respond(PayloadData(result))
             } catch (e: FailedToGeneratePaymentException) {
                 call.respond(HttpStatusCode.InternalServerError, MessageData("Cannot create booking for this seat"))
