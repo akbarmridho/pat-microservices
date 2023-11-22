@@ -31,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
+    implementation("com.github.librepdf:openpdf:1.3.33")
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-json:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")

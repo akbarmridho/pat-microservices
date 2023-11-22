@@ -47,6 +47,12 @@ class BookingService {
         )
     }
 
+    suspend fun find(id: Int): Booking = dbQuery {
+        val event = BookingDao[id].toModel()
+
+        event
+    }
+
     private fun dispatchFailedBookingTask(seatId: Int) {
         cancelationChannel.basicPublish(
             "",

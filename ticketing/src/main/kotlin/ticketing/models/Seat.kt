@@ -14,7 +14,7 @@ enum class SeatStatus(val status: String) {
 }
 
 @Serializable
-data class Seat(val id: Int, val seatNumber: Int, val status: SeatStatus)
+data class Seat(val id: Int, val seatNumber: Int, val status: SeatStatus, val eventId: Int)
 
 object Seats : IntIdTable() {
     val event = reference("event_id", Events)
@@ -30,6 +30,6 @@ class SeatDao(id: EntityID<Int>) : IntEntity(id) {
     var event by EventDao referencedOn Seats.event
 
     fun toModel(): Seat {
-        return Seat(id.value, seatNumber, status)
+        return Seat(id.value, seatNumber, status, event.id.value)
     }
 }

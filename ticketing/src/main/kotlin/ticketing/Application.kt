@@ -80,7 +80,7 @@ fun Application.module() {
             call.respondText("Hello World!")
         }
 
-        bookings(bookingService)
+        bookings(bookingService, eventService)
         events(eventService)
     }
 }
