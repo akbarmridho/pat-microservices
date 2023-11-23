@@ -1,10 +1,8 @@
-# Client App
+# Ticket App
 
 ## API Docs
 
 ### HTTP APIs
-
-todo change this
 
 | HTTP Method | Endpoint             | Description                     |
 |-------------|----------------------|---------------------------------|
@@ -20,6 +18,6 @@ todo change this
 
 ## How To Start
 
-1. Pastikan port 5433 dan 3000 tersedia
+1. Pastikan port 5433 dan 8000 tersedia
 2. Pada root folder, jalankan `docker compose up`
-3. Panggil http://localhost:3000 untuk memeriksa apakah service hidup
+3. Panggil http://localhost:8000 untuk memeriksa apakah service hidup
