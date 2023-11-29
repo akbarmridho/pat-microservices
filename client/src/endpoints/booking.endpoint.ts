@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import {
   addNewBooking,
+  getBookingById,
   getTicketBookingId,
   updateBookingStatus,
 } from 'src/database/repos/booking';
@@ -116,30 +117,52 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
   }),
   output: z.object({
     id: z.number(),
-    seat: z.object({
-      id: z.number(),
-      seatNumber: z.number(),
-      status: z.string(),
-      eventId: z.number(),
-    }),
-    status: z.string(),
-    failReason: z.string().nullable(),
-    invoiceId: z.string().nullable(),
-    paymentUrl: z.string().nullable(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    ticketBookingId: z.number().nullable(),
+    userId: z.string(),
+    createdAt: z.date(),
+    status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
     pdfUrl: z.string().nullable(),
   }),
   async handler({input}) {
-    const ticketBooking = await getBookingInfoRequest(input.id);
-    const pdfUrl = getPdfBookingUrl(input.id);
-
-    if (!ticketBooking) {
+    const booking = await getBookingById(input.id);
+    if (!booking) {
       throw createHttpError(404, 'Booking not found');
+    }
+
+    if (booking.ticketBookingId === null) {
+      return {
+        ...booking,
+        pdfUrl: null,
+      };
+    }
+
+    if (booking.status === 'PROCESSED') {
+      const ticketBooking = await getBookingInfoRequest(
+        booking.ticketBookingId
+      );
+      if (!ticketBooking) {
+        await updateBookingStatus(input.id, 'FAILED');
+        return {
+          ...booking,
+          pdfUrl: null,
+        };
+      }
+      if (ticketBooking.status === 'Success') {
+        await updateBookingStatus(input.id, 'SUCCESS');
+      } else if (ticketBooking.status === 'Failed') {
+        await updateBookingStatus(input.id, 'FAILED');
+      }
+    }
+    const pdfUrl = getPdfBookingUrl(booking.ticketBookingId);
+    if (pdfUrl === null) {
+      return {
+        ...booking,
+        pdfUrl: "Can't get pdf url",
+      };
     } else {
       return {
-        ...ticketBooking,
-        pdfUrl: pdfUrl,
+        ...booking,
+        pdfUrl,
       };
     }
   },
