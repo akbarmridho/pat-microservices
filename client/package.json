@@ -8,6 +8,7 @@
     "start": "node build/src/index.js",
     "build": "tsc && tsc-alias",
     "generate": "drizzle-kit generate:pg",
+    "seed": "tsx src/database/seed.ts",
     "migrate": "tsx src/database/migrate.ts",
     "migrate-prod": "node build/src/database/migrate.js",
     "openapi": "tsx src/openapi-generator.ts docs",
