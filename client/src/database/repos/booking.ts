@@ -1,28 +1,20 @@
 import {db} from '../db';
-import {bookings} from 'src/database/schema';
-import {eq} from 'drizzle-orm';
+import {Booking, bookings} from 'src/database/schema';
+import {eq, and, inArray} from 'drizzle-orm';
 import {firstSure} from '../helper';
 
 export async function addNewBooking(data: {
   ticketBookingId: number | null;
+  seatId: number;
   userId: string;
-  status: 'SUCCESS' | 'FAILED' | 'PROCESSED' | 'CANCELLED';
+  status: Booking['status'];
 }) {
-  return (
-    await db
-      .insert(bookings)
-      .values({
-        ticketBookingId: data.ticketBookingId,
-        userId: data.userId,
-        status: data.status,
-      })
-      .returning()
-  )[0];
+  return await db.insert(bookings).values(data).returning().then(firstSure);
 }
 
 export async function updateBookingStatus(
   id: number,
-  status: 'SUCCESS' | 'FAILED' | 'PROCESSED' | 'CANCELLED'
+  status: Booking['status']
 ) {
   return await db
     .update(bookings)
@@ -47,4 +39,14 @@ export async function getBookingById(id: number) {
     .from(bookings)
     .where(eq(bookings.id, id))
     .then(firstSure);
+}
+
+export async function getBookingsBySeats(userId: string, seatIds: number[]) {
+  if (!seatIds.length) {
+    return [];
+  }
+  return await db
+    .select()
+    .from(bookings)
+    .where(and(eq(bookings.userId, userId), inArray(bookings.seatId, seatIds)));
 }

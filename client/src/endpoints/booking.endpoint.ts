@@ -1,4 +1,5 @@
 import createHttpError from 'http-errors';
+import {db} from 'src/database/db';
 import {
   addNewBooking,
   getBookingById,
@@ -6,15 +7,26 @@ import {
   updateBookingStatus,
 } from 'src/database/repos/booking';
 import {getAllUserBookings} from 'src/database/repos/user';
+import {Booking} from 'src/database/schema';
 import {authReqEndpointsFactory} from 'src/factories/auth';
 import {
   cancelBookingRequest,
   createBookingRequest,
   getBookingInfoRequest,
   getPdfBookingUrl,
+  getBatchTicketBooking,
+  updateNeededBookings,
 } from 'src/service/ticket.service';
 import {BookingRequest, CancelBookingRequest} from 'src/types/booking';
 import {z} from 'zod';
+
+const StatusEnum = z.enum([
+  'SUCCESS',
+  'FAILED',
+  'INPROCESS',
+  'QUEUED',
+  'CANCELLED',
+]);
 
 export const addNewBookingEndpoint = authReqEndpointsFactory.build({
   tag: 'booking',
@@ -25,7 +37,7 @@ export const addNewBookingEndpoint = authReqEndpointsFactory.build({
     ticketBookingId: z.number().nullable(),
     userId: z.string(),
     createdAt: z.date(),
-    status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
+    status: StatusEnum,
     ticketBooking: z
       .object({
         id: z.number(),
@@ -53,6 +65,7 @@ export const addNewBookingEndpoint = authReqEndpointsFactory.build({
         ticketBookingId: null,
         userId,
         status: 'FAILED',
+        seatId: input.seatId,
       });
 
       return {
@@ -63,7 +76,8 @@ export const addNewBookingEndpoint = authReqEndpointsFactory.build({
       const result = await addNewBooking({
         ticketBookingId: ticketBooking.id,
         userId,
-        status: 'PROCESSED',
+        status: ticketBooking.status.toUpperCase() as Booking['status'],
+        seatId: input.seatId,
       });
 
       return {
@@ -120,7 +134,7 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
     ticketBookingId: z.number().nullable(),
     userId: z.string(),
     createdAt: z.date(),
-    status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
+    status: StatusEnum,
     pdfUrl: z.string().nullable(),
   }),
   async handler({input}) {
@@ -136,7 +150,7 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
       };
     }
 
-    if (booking.status === 'PROCESSED') {
+    if (booking.status === 'INPROCESS' || booking.status === 'QUEUED') {
       const ticketBooking = await getBookingInfoRequest(
         booking.ticketBookingId
       );
@@ -147,10 +161,10 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
           pdfUrl: null,
         };
       }
-      if (ticketBooking.status === 'Success') {
-        await updateBookingStatus(input.id, 'SUCCESS');
-      } else if (ticketBooking.status === 'Failed') {
-        await updateBookingStatus(input.id, 'FAILED');
+      if (ticketBooking.status !== booking.status) {
+        booking.status =
+          ticketBooking.status.toUpperCase() as Booking['status'];
+        await updateBookingStatus(input.id, booking.status);
       }
     }
     const pdfUrl = getPdfBookingUrl(booking.ticketBookingId);
@@ -179,44 +193,14 @@ export const getAllUserBookingsEndpoint = authReqEndpointsFactory.build({
         ticketBookingId: z.number().nullable(),
         userId: z.string(),
         createdAt: z.date(),
-        status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
+        status: StatusEnum,
       })
     ),
   }),
   async handler({options: {user}}) {
     const bookings = await getAllUserBookings(user.id);
-    if (!bookings) {
-      throw createHttpError(404, 'Booking not found');
-    }
 
-    for (let i = 0; i < bookings.length; i++) {
-      if (
-        bookings[i].status === 'CANCELLED' ||
-        bookings[i].status === 'FAILED' ||
-        bookings[i].status === 'SUCCESS'
-      ) {
-        continue;
-      }
-      const ticketBookingId = bookings[i].ticketBookingId;
-      if (ticketBookingId === null) {
-        bookings[i].status = 'FAILED';
-      } else {
-        const ticketBooking = await getBookingInfoRequest(ticketBookingId);
-        if (!ticketBooking) {
-          bookings[i].status = 'FAILED';
-        } else {
-          const status = ticketBooking.status;
-          if (status === 'Success') {
-            bookings[i].status = 'SUCCESS';
-          } else if (status === 'Failed') {
-            bookings[i].status = 'FAILED';
-          } else {
-            bookings[i].status = 'PROCESSED';
-          }
-          updateBookingStatus(bookings[i].id, bookings[i].status);
-        }
-      }
-    }
+    await updateNeededBookings(bookings);
 
     return {
       bookings,

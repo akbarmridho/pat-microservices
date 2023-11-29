@@ -12,6 +12,8 @@ todo change this
 | POST        | /bookings/cancel | Cancel a booking             |
 | GET         | /bookings/{id}   | Get booking info             |
 | GET         | /bookings/       | Get all user bookings        |
+| GET         | /events          | Get all events               |
+| GET         | /events/{id}     | Get event info               |
 
 ## How To Start
 

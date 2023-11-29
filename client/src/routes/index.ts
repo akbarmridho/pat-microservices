@@ -12,6 +12,10 @@ import {
   getAllUserBookingsEndpoint,
   getBookingInfoEndpoint,
 } from 'src/endpoints/booking.endpoint';
+import {
+  getEventByIdEndpoint,
+  getEventsEndpoint,
+} from 'src/endpoints/ticket.endpoint';
 
 export const routing: Routing = {
   api: {
@@ -28,6 +32,10 @@ export const routing: Routing = {
       }),
       ':id': getBookingInfoEndpoint,
       cancel: cancelBookingEndpoint,
+    },
+    events: {
+      '': getEventsEndpoint,
+      ':id': getEventByIdEndpoint,
     },
   },
 };

@@ -93,7 +93,6 @@ services:
       - TICKETING_URL=http://host.docker.internal:8000
 networks:
   pat:
-    driver: host
 volumes:
   message_data:
   message_log:

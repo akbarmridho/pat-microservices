@@ -1,5 +1,5 @@
 import {createId} from '@paralleldrive/cuid2';
-import {relations} from 'drizzle-orm';
+import {InferSelectModel, relations} from 'drizzle-orm';
 import {integer, pgTable, serial, text, timestamp} from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
@@ -16,6 +16,7 @@ export const usersRelation = relations(users, ({many}) => ({
 
 export const bookings = pgTable('bookings', {
   id: serial('id').primaryKey(),
+  seatId: integer('seat_id').notNull(),
   ticketBookingId: integer('ticket_booking_id'),
   userId: text('user_id')
     .notNull()
@@ -24,9 +25,11 @@ export const bookings = pgTable('bookings', {
     .notNull()
     .defaultNow(),
   status: text('status', {
-    enum: ['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED'],
+    enum: ['SUCCESS', 'FAILED', 'INPROCESS', 'QUEUED', 'CANCELLED'],
   }).notNull(),
 });
+
+export type Booking = InferSelectModel<typeof bookings>;
 
 export const bookingsRelation = relations(bookings, ({one}) => ({
   user: one(users, {
