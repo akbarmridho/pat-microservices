@@ -6,7 +6,12 @@ import {
   registerEndpoint,
   updateUserEndpoint,
 } from 'src/endpoints/auth.endpoint';
-import {getBookingInfoEndpoint} from 'src/endpoints/booking.endpoint';
+import {
+  addNewBookingEndpoint,
+  cancelBookingEndpoint,
+  getAllUserBookingsEndpoint,
+  getBookingInfoEndpoint,
+} from 'src/endpoints/booking.endpoint';
 
 export const routing: Routing = {
   api: {
@@ -17,7 +22,12 @@ export const routing: Routing = {
       user: new DependsOnMethod({get: meEndpoint, put: updateUserEndpoint}),
     },
     bookings: {
+      '': new DependsOnMethod({
+        get: getAllUserBookingsEndpoint,
+        post: addNewBookingEndpoint,
+      }),
       ':id': getBookingInfoEndpoint,
+      cancel: cancelBookingEndpoint,
     },
   },
 };
