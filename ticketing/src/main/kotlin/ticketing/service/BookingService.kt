@@ -18,6 +18,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -56,6 +57,12 @@ class BookingService {
         val event = BookingDao[id].toModel()
 
         event
+    }
+
+    suspend fun findMany(ids: List<Int>): List<Booking> = dbQuery {
+        val result = BookingDao.find(Bookings.id inList ids).map { it.toModel() }
+
+        result
     }
 
     private fun dispatchFailedBookingTask(seatId: Int) {

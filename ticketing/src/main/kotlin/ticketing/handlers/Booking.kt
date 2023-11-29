@@ -22,7 +22,7 @@ import ticketing.utils.PayloadData
 import java.io.ByteArrayOutputStream
 
 @Resource("/bookings")
-class BookingRoute {
+class BookingRoute(val ids: List<Int>? = null) {
 
     @Resource("webhook")
     class Webhook(val parent: BookingRoute = BookingRoute())
@@ -38,6 +38,17 @@ class BookingRoute {
 }
 
 fun Route.bookings(bookingService: BookingService, eventService: EventService) {
+    get<BookingRoute> { booking ->
+        val ids = booking.ids
+
+        if (ids == null) {
+            call.respond(HttpStatusCode.BadRequest, MessageData("No ids provided"))
+        } else {
+            val payload = bookingService.findMany(ids)
+            call.respond(PayloadData(payload))
+        }
+    }
+
     post<BookingRoute> {
         val payload = call.receive<CreateBookingRequest>()
 
