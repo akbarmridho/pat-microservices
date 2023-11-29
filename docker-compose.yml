@@ -58,7 +58,7 @@ services:
     volumes:
       - postgres:/data/postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
   ticketing:
     build:
@@ -77,7 +77,23 @@ services:
       JDBC_PASSWORD: pgpassword
       RMQ_HOST: host.docker.internal
       PAYMENT_SERVICE_ENDPOINT: http://host.docker.internal:8080
-
+  client:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - pat
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-pgpassword}@postgresql:5432/client
+      - TICKETING_URL=http://host.docker.internal:8000
+networks:
+  pat:
+    driver: host
 volumes:
   message_data:
   message_log:
