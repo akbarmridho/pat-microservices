@@ -12,11 +12,7 @@ import {
   getBookingInfoRequest,
   getPdfBookingUrl,
 } from 'src/service/ticket.service';
-import {
-  BookingRequest,
-  CancelBookingRequest,
-  TicketBooking,
-} from 'src/types/booking';
+import {BookingRequest, CancelBookingRequest} from 'src/types/booking';
 import {z} from 'zod';
 
 export const addNewBookingEndpoint = authReqEndpointsFactory.build({
