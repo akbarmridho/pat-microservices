@@ -6,17 +6,12 @@
 
 todo change this
 
-| HTTP Method | Endpoint             | Description                     |
-|-------------|----------------------|---------------------------------|
-| GET         | /events              | Get all available events        |
-| POST        | /events              | Create new events               |
-| GET         | /events/{id}         | Get an event                    |
-| POST        | /bookings            | Crate new booking for a seat    | 
-| POST        | /bookings/cancel     | Cancel a booking                |
-| POST        | /bookings/webhook    | Confirm booking payment         |
-| GET         | /bookings/{id}       | Get booking info                |
-| GET         | /bookings/{id}/print | Get pdf version of booking info |
-
+| HTTP Method | Endpoint         | Description                  |
+| ----------- | ---------------- | ---------------------------- |
+| POST        | /bookings        | Crate new booking for a seat |
+| POST        | /bookings/cancel | Cancel a booking             |
+| GET         | /bookings/{id}   | Get booking info             |
+| GET         | /bookings/       | Get all user bookings        |
 
 ## How To Start
 
