@@ -33,6 +33,7 @@ export const env = createEnv({
       ])
       .default('HS256'),
     JWT_EXPIRES_IN: z.string().default('1w'),
+    BASE_TICKET_SERVICE_URL: z.string().default('http://localhost:8000'),
   },
   runtimeEnv: process.env,
 });

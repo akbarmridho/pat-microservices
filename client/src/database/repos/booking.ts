@@ -1,6 +1,6 @@
-import {db} from '../db';
-import {bookings} from 'src/database/schema';
 import {eq} from 'drizzle-orm';
+import {bookings} from 'src/database/schema';
+import {db} from '../db';
 import {firstSure} from '../helper';
 
 export async function addNewBooking(data: {

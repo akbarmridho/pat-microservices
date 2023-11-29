@@ -1,9 +1,8 @@
+import {env} from 'src/config/env';
 import {CancelBookingResponse, TicketBooking} from 'src/types/booking';
 
-const BASE_TICKET_SERVICE_URL = 'http://localhost:8000';
-
 export async function createBookingRequest(seatId: number) {
-  const endpoint = `${BASE_TICKET_SERVICE_URL}/bookings`;
+  const endpoint = `${env.BASE_TICKET_SERVICE_URL}/bookings`;
 
   try {
     const response = await fetch(endpoint, {
@@ -15,6 +14,10 @@ export async function createBookingRequest(seatId: number) {
       body: JSON.stringify({id: seatId}),
     });
 
+    if (!response.ok) {
+      return null;
+    }
+
     return (await response.json()) as TicketBooking;
   } catch {
     return null;
@@ -22,7 +25,7 @@ export async function createBookingRequest(seatId: number) {
 }
 
 export async function cancelBookingRequest(ticketBookingId: number) {
-  const endpoint = `${BASE_TICKET_SERVICE_URL}/bookings/cancel`;
+  const endpoint = `${env.BASE_TICKET_SERVICE_URL}/bookings/cancel`;
 
   try {
     const response = await fetch(endpoint, {
@@ -34,6 +37,10 @@ export async function cancelBookingRequest(ticketBookingId: number) {
       body: JSON.stringify({id: ticketBookingId}),
     });
 
+    if (!response.ok) {
+      return null;
+    }
+
     return (await response.json()) as CancelBookingResponse;
   } catch {
     return null;
@@ -41,7 +48,7 @@ export async function cancelBookingRequest(ticketBookingId: number) {
 }
 
 export async function getBookingInfoRequest(ticketBookingId: number) {
-  const endpoint = `${BASE_TICKET_SERVICE_URL}/bookings/${ticketBookingId}`;
+  const endpoint = `${env.BASE_TICKET_SERVICE_URL}/bookings/${ticketBookingId}`;
 
   try {
     const response = await fetch(endpoint, {
@@ -52,6 +59,10 @@ export async function getBookingInfoRequest(ticketBookingId: number) {
       },
     });
 
+    if (!response.ok) {
+      return null;
+    }
+
     return (await response.json()) as TicketBooking;
   } catch {
     return null;
@@ -59,5 +70,5 @@ export async function getBookingInfoRequest(ticketBookingId: number) {
 }
 
 export function getPdfBookingUrl(ticketBookingId: number) {
-  return `${BASE_TICKET_SERVICE_URL}/bookings/${ticketBookingId}/print`;
+  return `${env.BASE_TICKET_SERVICE_URL}/bookings/${ticketBookingId}/print`;
 }
