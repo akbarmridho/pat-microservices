@@ -1,5 +1,5 @@
+import {ez} from 'express-zod-api';
 import createHttpError from 'http-errors';
-import {db} from 'src/database/db';
 import {
   addNewBooking,
   getBookingById,
@@ -14,12 +14,10 @@ import {
   createBookingRequest,
   getBookingInfoRequest,
   getPdfBookingUrl,
-  getBatchTicketBooking,
   updateNeededBookings,
 } from 'src/service/ticket.service';
 import {BookingRequest, CancelBookingRequest} from 'src/types/booking';
 import {z} from 'zod';
-import {ez} from 'express-zod-api';
 
 const StatusEnum = z.enum([
   'SUCCESS',
@@ -96,8 +94,8 @@ export const cancelBookingEndpoint = authReqEndpointsFactory.build({
   output: z.object({
     message: z.string(),
   }),
-  async handler({input}) {
-    const ticketBookingId = await getTicketBookingId(input.id);
+  async handler({input, options: {user}}) {
+    const ticketBookingId = await getTicketBookingId(input.id, user.id);
 
     if (ticketBookingId === null) {
       throw createHttpError(404, 'Booking not found');

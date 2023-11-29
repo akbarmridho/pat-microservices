@@ -1,6 +1,6 @@
-import {db} from '../db';
+import {and, eq, inArray} from 'drizzle-orm';
 import {Booking, bookings} from 'src/database/schema';
-import {eq, and, inArray} from 'drizzle-orm';
+import {db} from '../db';
 import {firstSure} from '../helper';
 
 export async function addNewBooking(data: {
@@ -24,11 +24,11 @@ export async function updateBookingStatus(
     .where(eq(bookings.id, id));
 }
 
-export async function getTicketBookingId(id: number) {
+export async function getTicketBookingId(id: number, userId: string) {
   return await db
     .select({ticketBookingId: bookings.ticketBookingId})
     .from(bookings)
-    .where(eq(bookings.id, id))
+    .where(and(eq(bookings.id, id), eq(bookings.userId, userId)))
     .then(firstSure)
     .then(booking => booking.ticketBookingId);
 }
