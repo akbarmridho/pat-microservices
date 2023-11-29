@@ -10,8 +10,6 @@ services:
     volumes:
       - message_data:/var/lib/rabbitmq/
       - message_log:/var/log/rabbitmq/
-    networks:
-      - pat
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 10s
@@ -29,8 +27,6 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-    networks:
-      - pat
   payment:
     build:
       context: ./payment
@@ -49,8 +45,6 @@ services:
         condition: service_started
       message:
         condition: service_healthy
-    networks:
-      - pat
   postgresql:
     build:
       dockerfile: ./postgres.Dockerfile
@@ -63,8 +57,6 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-    networks:
-      - pat
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
@@ -74,8 +66,6 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "8000:8000"
-    networks:
-      - pat
     depends_on:
       postgresql:
         condition: service_healthy
