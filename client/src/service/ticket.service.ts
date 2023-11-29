@@ -135,7 +135,9 @@ export async function updateNeededBookings(bookings: Booking[]) {
     const promises: Promise<any>[] = [];
 
     for (const booking of processedBookings) {
-      const fromRequest = bookingsFromTicketing.find(b => b.id === booking.id)!;
+      const fromRequest = bookingsFromTicketing.find(
+        b => b.id === booking.ticketBookingId
+      )!;
       if (booking.status !== fromRequest.status) {
         booking.status = fromRequest.status.toUpperCase() as Booking['status'];
         promises.push(updateBookingStatus(booking.id, booking.status));

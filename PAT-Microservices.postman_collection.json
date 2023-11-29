@@ -1,0 +1,1371 @@
+{
+	"info": {
+		"_postman_id": "86d406b7-e971-47e7-9da4-1bcc91e00ca1",
+		"name": "PAT-Microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17407488"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "login",
+							"item": [
+								{
+									"name": "Post Api Auth Login",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "POST /api/auth/login Successful response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"login"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"id\": \"<string>\"\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "POST /api/auth/login Error response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"login"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "register",
+							"item": [
+								{
+									"name": "Post Api Auth Register",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"/TPo!MH/\",\n  \"password\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/register",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"register"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "POST /api/auth/register Successful response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"/TPo!MH/\",\n  \"password\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/register",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"register"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"id\": \"<string>\"\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "POST /api/auth/register Error response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"/TPo!MH/\",\n  \"password\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/register",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"register"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "logout",
+							"item": [
+								{
+									"name": "Post Api Auth Logout",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/logout",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"logout"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "POST /api/auth/logout Successful response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/logout",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"logout"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {},\n  \"success\": true\n}"
+										},
+										{
+											"name": "POST /api/auth/logout Error response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/logout",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"logout"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "Get Api Auth User",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/user",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"user"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "GET /api/auth/user Successful response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/user",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"user"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"user\": {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"username\": \"<string>\"\n    }\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "GET /api/auth/user Error response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/user",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"user"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								},
+								{
+									"name": "Put Api Auth User",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"/v//\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/user",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"user"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "PUT /api/auth/user Successful response",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"/v//\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/user",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"user"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"username\": \"<string>\"\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "PUT /api/auth/user Error response",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"name\": \"<string>\",\n  \"username\": \"/v//\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/user",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"user"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "bookings",
+					"item": [
+						{
+							"name": "{id}",
+							"item": [
+								{
+									"name": "Get Api Bookings Id",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) GET /api/bookings/:id parameter"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "GET /api/bookings/:id Successful response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"id\": \"<double>\",\n    \"ticketBookingId\": \"<double>\",\n    \"userId\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"status\": \"INPROCESS\",\n    \"pdfUrl\": \"<string>\"\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "GET /api/bookings/:id Error response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "cancel",
+							"item": [
+								{
+									"name": "Post Api Bookings Cancel",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"<long>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/cancel",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"cancel"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "POST /api/bookings/cancel Successful response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"id\": \"<long>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/cancel",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														"cancel"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"message\": \"<string>\"\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "POST /api/bookings/cancel Error response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"id\": \"<long>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/cancel",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														"cancel"
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get Api Bookings",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/bookings",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"bookings"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "GET /api/bookings Successful response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"data\": {\n    \"bookings\": [\n      {\n        \"id\": \"<double>\",\n        \"ticketBookingId\": \"<double>\",\n        \"userId\": \"<string>\",\n        \"createdAt\": \"<dateTime>\",\n        \"status\": \"SUCCESS\"\n      },\n      {\n        \"id\": \"<double>\",\n        \"ticketBookingId\": \"<double>\",\n        \"userId\": \"<string>\",\n        \"createdAt\": \"<dateTime>\",\n        \"status\": \"INPROCESS\"\n      }\n    ]\n  },\n  \"success\": true\n}"
+								},
+								{
+									"name": "GET /api/bookings Error response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+								}
+							]
+						},
+						{
+							"name": "Post Api Bookings",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"seatId\": \"<long>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/bookings",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"bookings"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "POST /api/bookings Successful response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"seatId\": \"<long>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"data\": {\n    \"id\": \"<double>\",\n    \"ticketBookingId\": \"<double>\",\n    \"userId\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"status\": \"INPROCESS\",\n    \"ticketBooking\": {\n      \"id\": \"<double>\",\n      \"seat\": {\n        \"id\": \"<double>\",\n        \"seatNumber\": \"<double>\",\n        \"status\": \"<string>\",\n        \"eventId\": \"<double>\"\n      },\n      \"status\": \"<string>\",\n      \"failReason\": \"<string>\",\n      \"invoiceId\": \"<string>\",\n      \"paymentUrl\": \"<string>\",\n      \"createdAt\": \"<string>\",\n      \"updatedAt\": \"<string>\"\n    }\n  },\n  \"success\": true\n}"
+								},
+								{
+									"name": "POST /api/bookings Error response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"seatId\": \"<long>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "events",
+					"item": [
+						{
+							"name": "{id}",
+							"item": [
+								{
+									"name": "Get Api Events Id",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/events/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"events",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) GET /api/events/:id parameter"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "GET /api/events/:id Successful response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/events/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"events",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"data\": {\n    \"id\": \"<long>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"price\": \"<double>\",\n    \"seats\": [\n      {\n        \"id\": \"<long>\",\n        \"seatNumber\": \"<long>\",\n        \"status\": \"QUEUED\",\n        \"eventId\": \"<long>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"seatNumber\": \"<long>\",\n        \"status\": \"INPROCESS\",\n        \"eventId\": \"<long>\"\n      }\n    ]\n  },\n  \"success\": true\n}"
+										},
+										{
+											"name": "GET /api/events/:id Error response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/events/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"events",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get Api Events",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"events"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "GET /api/events Successful response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/events",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"events"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"data\": {\n    \"events\": [\n      {\n        \"id\": \"<long>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"seatCount\": \"<long>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"seatCount\": \"<long>\"\n      }\n    ]\n  },\n  \"success\": true\n}"
+								},
+								{
+									"name": "GET /api/events Error response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/events",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"events"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"message\": \"<string>\",\n  \"success\": false\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		}
+	]
+}

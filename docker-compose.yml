@@ -4,6 +4,8 @@ services:
   message:
     image: heidiks/rabbitmq-delayed-message-exchange:latest
     restart: unless-stopped
+    networks:
+      - pat
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -20,6 +22,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    networks:
+      - pat
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
@@ -36,6 +40,8 @@ services:
       - "8080:8080"
     env_file:
       - .env
+    networks:
+      - pat
     environment:
       - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/payment?ssl=false&authSource=admin
       - RABBITMQ_URI=amqp://guest:guest@message:5672
@@ -57,6 +63,8 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+    networks:
+      - pat
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
@@ -66,6 +74,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "8000:8000"
+    networks:
+      - pat
     depends_on:
       postgresql:
         condition: service_healthy
@@ -90,7 +100,7 @@ services:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-pgpassword}@postgresql:5432/client
-      - TICKETING_URL=http://host.docker.internal:8000
+      - BASE_TICKET_SERVICE_URL=http://host.docker.internal:8000
 networks:
   pat:
 volumes:

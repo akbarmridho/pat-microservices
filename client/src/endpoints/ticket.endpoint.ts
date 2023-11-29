@@ -9,6 +9,7 @@ import {
   EventSchema,
 } from 'src/types/event';
 import {z} from 'zod';
+import {Booking} from '../database/schema';
 
 export const getEventsEndpoint = authReqEndpointsFactory.build({
   method: 'get',
@@ -33,16 +34,9 @@ export const getEventByIdEndpoint = authReqEndpointsFactory.build({
     if (!event) {
       throw createHttpError(404, 'Event not found');
     }
-    const seatIds = event.seats.map(seat => seat.id);
-    const bookings = await getBookingsBySeats(user.id, seatIds);
-    await updateNeededBookings(bookings);
-    event.seats.forEach(seat => {
-      const bookingSeat = bookings.find(s => s.seatId === seat.id);
-      if (bookingSeat) {
-        seat.status = bookingSeat.status;
-      } else {
-        seat.status = null;
-      }
+
+    event.seats.forEach(e => {
+      e.status = e.status.toUpperCase();
     });
 
     return event;

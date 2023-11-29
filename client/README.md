@@ -20,3 +20,8 @@ todo change this
 1. Pastikan port 5433 dan 3000 tersedia
 2. Pada root folder, jalankan `docker compose up`
 3. Panggil http://localhost:3000 untuk memeriksa apakah service hidup
+
+## How to Seed
+
+1. Copy .env.example to .env
+2. Run `pnpm seed`

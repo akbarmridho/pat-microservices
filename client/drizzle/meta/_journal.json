@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1700414464766,
-      "tag": "0000_unusual_oracle",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1700418201473,
-      "tag": "0001_medical_deadpool",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1701271022704,
-      "tag": "0002_aberrant_anthem",
+      "when": 1701272259773,
+      "tag": "0000_whole_mach_iv",
       "breakpoints": true
     }
   ]

@@ -8,22 +8,12 @@ export const EventSchema = z.object({
   price: z.number().positive(),
 });
 
-const StatusEnum = z.enum([
-  'SUCCESS',
-  'FAILED',
-  'INPROCESS',
-  'QUEUED',
-  'CANCELLED',
-]);
-
-export const EventPreviewSchema = EventSchema.extend({
-  seatCount: z.number().int().positive(),
-});
+export const EventPreviewSchema = EventSchema.extend({});
 
 export const EventDetailSchema = EventSchema.extend({
   seats: z.array(
     SeatSchema.extend({
-      status: StatusEnum.nullable(),
+      status: z.string(),
     })
   ),
 });

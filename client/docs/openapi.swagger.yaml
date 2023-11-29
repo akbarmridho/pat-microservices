@@ -116,6 +116,135 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PutApiAuthUserRequestBody"
+  /api/bookings:
+    get:
+      operationId: GetApiBookings
+      responses:
+        "200":
+          description: GET /api/bookings Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetApiBookingsSuccessfulResponse"
+        "400":
+          description: GET /api/bookings Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - booking
+    post:
+      operationId: PostApiBookings
+      responses:
+        "200":
+          description: POST /api/bookings Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostApiBookingsSuccessfulResponse"
+        "400":
+          description: POST /api/bookings Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - booking
+      requestBody:
+        description: POST /api/bookings request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostApiBookingsRequestBody"
+  /api/bookings/{id}:
+    get:
+      operationId: GetApiBookingsId
+      responses:
+        "200":
+          description: GET /api/bookings/:id Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetApiBookingsIdSuccessfulResponse"
+        "400":
+          description: GET /api/bookings/:id Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: GET /api/bookings/:id parameter
+          schema:
+            $ref: "#/components/schemas/GetApiBookingsIdParameterId"
+  /api/bookings/cancel:
+    post:
+      operationId: PostApiBookingsCancel
+      responses:
+        "200":
+          description: POST /api/bookings/cancel Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostApiBookingsCancelSuccessfulResponse"
+        "400":
+          description: POST /api/bookings/cancel Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - booking
+      requestBody:
+        description: POST /api/bookings/cancel request body
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostApiBookingsCancelRequestBody"
+  /api/events:
+    get:
+      operationId: GetApiEvents
+      responses:
+        "200":
+          description: GET /api/events Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetApiEventsSuccessfulResponse"
+        "400":
+          description: GET /api/events Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/events/{id}:
+    get:
+      operationId: GetApiEventsId
+      responses:
+        "200":
+          description: GET /api/events/:id Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetApiEventsIdSuccessfulResponse"
+        "400":
+          description: GET /api/events/:id Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: GET /api/events/:id parameter
+          schema:
+            $ref: "#/components/schemas/GetApiEventsIdParameterId"
 components:
   schemas:
     PostApiAuthLoginSuccessfulResponse:
@@ -314,6 +443,425 @@ components:
           required:
             - name
             - username
+    GetApiBookingsSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            bookings:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    format: double
+                    minimum: 5e-324
+                    exclusiveMinimum: false
+                    maximum: 1.7976931348623157e+308
+                    exclusiveMaximum: false
+                  ticketBookingId:
+                    nullable: true
+                    type: number
+                    format: double
+                    minimum: 5e-324
+                    exclusiveMinimum: false
+                    maximum: 1.7976931348623157e+308
+                    exclusiveMaximum: false
+                  userId:
+                    type: string
+                  createdAt:
+                    description: YYYY-MM-DDTHH:mm:ss.sssZ
+                    type: string
+                    format: date-time
+                    externalDocs:
+                      url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+                  status:
+                    type: string
+                    enum:
+                      - SUCCESS
+                      - FAILED
+                      - INPROCESS
+                      - QUEUED
+                      - CANCELLED
+                required:
+                  - id
+                  - ticketBookingId
+                  - userId
+                  - createdAt
+                  - status
+          required:
+            - bookings
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiBookingsSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              format: double
+              minimum: 5e-324
+              exclusiveMinimum: false
+              maximum: 1.7976931348623157e+308
+              exclusiveMaximum: false
+            ticketBookingId:
+              nullable: true
+              type: number
+              format: double
+              minimum: 5e-324
+              exclusiveMinimum: false
+              maximum: 1.7976931348623157e+308
+              exclusiveMaximum: false
+            userId:
+              type: string
+            createdAt:
+              description: YYYY-MM-DDTHH:mm:ss.sssZ
+              type: string
+              format: date-time
+              externalDocs:
+                url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+            status:
+              type: string
+              enum:
+                - SUCCESS
+                - FAILED
+                - INPROCESS
+                - QUEUED
+                - CANCELLED
+            ticketBooking:
+              nullable: true
+              type: object
+              properties:
+                id:
+                  type: number
+                  format: double
+                  minimum: 5e-324
+                  exclusiveMinimum: false
+                  maximum: 1.7976931348623157e+308
+                  exclusiveMaximum: false
+                seat:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      format: double
+                      minimum: 5e-324
+                      exclusiveMinimum: false
+                      maximum: 1.7976931348623157e+308
+                      exclusiveMaximum: false
+                    seatNumber:
+                      type: number
+                      format: double
+                      minimum: 5e-324
+                      exclusiveMinimum: false
+                      maximum: 1.7976931348623157e+308
+                      exclusiveMaximum: false
+                    status:
+                      type: string
+                    eventId:
+                      type: number
+                      format: double
+                      minimum: 5e-324
+                      exclusiveMinimum: false
+                      maximum: 1.7976931348623157e+308
+                      exclusiveMaximum: false
+                  required:
+                    - id
+                    - seatNumber
+                    - status
+                    - eventId
+                status:
+                  type: string
+                failReason:
+                  nullable: true
+                  type: string
+                invoiceId:
+                  nullable: true
+                  type: string
+                paymentUrl:
+                  nullable: true
+                  type: string
+                createdAt:
+                  type: string
+                updatedAt:
+                  type: string
+              required:
+                - id
+                - seat
+                - status
+                - failReason
+                - invoiceId
+                - paymentUrl
+                - createdAt
+                - updatedAt
+          required:
+            - id
+            - ticketBookingId
+            - userId
+            - createdAt
+            - status
+            - ticketBooking
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiBookingsRequestBody:
+      allOf:
+        - allOf:
+            - allOf:
+                - type: object
+                  properties: {}
+                - type: object
+                  properties: {}
+            - type: object
+              properties: {}
+        - type: object
+          properties:
+            seatId:
+              type: integer
+              format: int64
+              minimum: 0
+              exclusiveMinimum: true
+              maximum: 9007199254740991
+              exclusiveMaximum: false
+          required:
+            - seatId
+    GetApiBookingsIdParameterId:
+      type: string
+    GetApiBookingsIdSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              format: double
+              minimum: 5e-324
+              exclusiveMinimum: false
+              maximum: 1.7976931348623157e+308
+              exclusiveMaximum: false
+            ticketBookingId:
+              nullable: true
+              type: number
+              format: double
+              minimum: 5e-324
+              exclusiveMinimum: false
+              maximum: 1.7976931348623157e+308
+              exclusiveMaximum: false
+            userId:
+              type: string
+            createdAt:
+              description: YYYY-MM-DDTHH:mm:ss.sssZ
+              type: string
+              format: date-time
+              externalDocs:
+                url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+            status:
+              type: string
+              enum:
+                - SUCCESS
+                - FAILED
+                - INPROCESS
+                - QUEUED
+                - CANCELLED
+            pdfUrl:
+              nullable: true
+              type: string
+          required:
+            - id
+            - ticketBookingId
+            - userId
+            - createdAt
+            - status
+            - pdfUrl
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiBookingsCancelSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+          required:
+            - message
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    PostApiBookingsCancelRequestBody:
+      allOf:
+        - allOf:
+            - allOf:
+                - type: object
+                  properties: {}
+                - type: object
+                  properties: {}
+            - type: object
+              properties: {}
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              minimum: 0
+              exclusiveMinimum: true
+              maximum: 9007199254740991
+              exclusiveMaximum: false
+          required:
+            - id
+    GetApiEventsSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 9007199254740991
+                    exclusiveMaximum: false
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  price:
+                    type: number
+                    format: double
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 1.7976931348623157e+308
+                    exclusiveMaximum: false
+                  seatCount:
+                    type: integer
+                    format: int64
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 9007199254740991
+                    exclusiveMaximum: false
+                required:
+                  - id
+                  - title
+                  - description
+                  - price
+                  - seatCount
+          required:
+            - events
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
+    GetApiEventsIdParameterId:
+      type: string
+    GetApiEventsIdSuccessfulResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              minimum: 0
+              exclusiveMinimum: true
+              maximum: 9007199254740991
+              exclusiveMaximum: false
+            title:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+              format: double
+              minimum: 0
+              exclusiveMinimum: true
+              maximum: 1.7976931348623157e+308
+              exclusiveMaximum: false
+            seats:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 9007199254740991
+                    exclusiveMaximum: false
+                  seatNumber:
+                    type: integer
+                    format: int64
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 9007199254740991
+                    exclusiveMaximum: false
+                  status:
+                    nullable: true
+                    type: string
+                    enum:
+                      - SUCCESS
+                      - FAILED
+                      - INPROCESS
+                      - QUEUED
+                      - CANCELLED
+                  eventId:
+                    type: integer
+                    format: int64
+                    minimum: 0
+                    exclusiveMinimum: true
+                    maximum: 9007199254740991
+                    exclusiveMaximum: false
+                required:
+                  - id
+                  - seatNumber
+                  - status
+                  - eventId
+          required:
+            - id
+            - title
+            - description
+            - price
+            - seats
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - data
+        - success
   responses: {}
   parameters: {}
   examples: {}

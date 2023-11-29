@@ -19,6 +19,7 @@ import {
 } from 'src/service/ticket.service';
 import {BookingRequest, CancelBookingRequest} from 'src/types/booking';
 import {z} from 'zod';
+import {ez} from 'express-zod-api';
 
 const StatusEnum = z.enum([
   'SUCCESS',
@@ -36,7 +37,7 @@ export const addNewBookingEndpoint = authReqEndpointsFactory.build({
     id: z.number(),
     ticketBookingId: z.number().nullable(),
     userId: z.string(),
-    createdAt: z.date(),
+    createdAt: ez.dateOut(),
     status: StatusEnum,
     ticketBooking: z
       .object({
@@ -110,16 +111,10 @@ export const cancelBookingEndpoint = authReqEndpointsFactory.build({
       };
     }
 
-    if (CancelBookingResponse.message === 'Ok') {
-      updateBookingStatus(input.id, 'CANCELLED');
-      return {
-        message: 'Booking cancelled',
-      };
-    } else {
-      return {
-        message: CancelBookingResponse.message,
-      };
-    }
+    updateBookingStatus(input.id, 'CANCELLED');
+    return {
+      message: 'Booking cancelled',
+    };
   },
 });
 
@@ -133,7 +128,7 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
     id: z.number(),
     ticketBookingId: z.number().nullable(),
     userId: z.string(),
-    createdAt: z.date(),
+    createdAt: ez.dateOut(),
     status: StatusEnum,
     pdfUrl: z.string().nullable(),
   }),
@@ -192,7 +187,7 @@ export const getAllUserBookingsEndpoint = authReqEndpointsFactory.build({
         id: z.number(),
         ticketBookingId: z.number().nullable(),
         userId: z.string(),
-        createdAt: z.date(),
+        createdAt: ez.dateOut(),
         status: StatusEnum,
       })
     ),

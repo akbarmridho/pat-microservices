@@ -20,11 +20,9 @@ async function main() {
   app.use(cookieParser());
   const {notFoundHandler} = attachRouting(config, routing);
 
-  if (isDev) {
-    const file = fs.readFileSync('./docs/openapi.swagger.yaml', 'utf8');
-    const swaggerDocument = YAML.parse(file);
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  }
+  const file = fs.readFileSync('./docs/openapi.swagger.yaml', 'utf8');
+  const swaggerDocument = YAML.parse(file);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   // not found handler
   app.use(notFoundHandler);
