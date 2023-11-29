@@ -1,5 +1,9 @@
 import createHttpError from 'http-errors';
-import {addNewBooking, updateBookingStatus} from 'src/database/repos/booking';
+import {
+  addNewBooking,
+  getTicketBookingId,
+  updateBookingStatus,
+} from 'src/database/repos/booking';
 import {getAllUserBookings} from 'src/database/repos/user';
 import {authReqEndpointsFactory} from 'src/factories/auth';
 import {
@@ -81,7 +85,13 @@ export const cancelBookingEndpoint = authReqEndpointsFactory.build({
     message: z.string(),
   }),
   async handler({input}) {
-    const CancelBookingResponse = await cancelBookingRequest(input.id);
+    const ticketBookingId = await getTicketBookingId(input.id);
+
+    if (ticketBookingId === null) {
+      throw createHttpError(404, 'Booking not found');
+    }
+
+    const CancelBookingResponse = await cancelBookingRequest(ticketBookingId);
 
     if (CancelBookingResponse === null) {
       return {
@@ -161,6 +171,13 @@ export const getAllUserBookingsEndpoint = authReqEndpointsFactory.build({
     }
 
     for (let i = 0; i < bookings.length; i++) {
+      if (
+        bookings[i].status === 'CANCELLED' ||
+        bookings[i].status === 'FAILED' ||
+        bookings[i].status === 'SUCCESS'
+      ) {
+        continue;
+      }
       const ticketBookingId = bookings[i].ticketBookingId;
       if (ticketBookingId === null) {
         bookings[i].status = 'FAILED';
