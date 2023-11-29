@@ -21,3 +21,8 @@
 1. Pastikan port 5433 dan 8000 tersedia
 2. Pada root folder, jalankan `docker compose up`
 3. Panggil http://localhost:8000 untuk memeriksa apakah service hidup
+
+## How To Seed
+
+1. Make sure the service is running
+2. Run `seed.py`
