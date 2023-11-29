@@ -24,7 +24,7 @@ export const bookings = pgTable('bookings', {
     .notNull()
     .defaultNow(),
   status: text('status', {
-    enum: ['SUCCESS', 'FAILED', 'QUEUED', 'IN_PROCESS'],
+    enum: ['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED'],
   }).notNull(),
 });
 

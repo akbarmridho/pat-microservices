@@ -1,5 +1,10 @@
 import createHttpError from 'http-errors';
-import {addNewBooking} from 'src/database/repos/booking';
+import {
+  addNewBooking,
+  getTicketBookingId,
+  updateBookingStatus,
+} from 'src/database/repos/booking';
+import {getAllUserBookings} from 'src/database/repos/user';
 import {authReqEndpointsFactory} from 'src/factories/auth';
 import {
   cancelBookingRequest,
@@ -7,10 +12,14 @@ import {
   getBookingInfoRequest,
   getPdfBookingUrl,
 } from 'src/service/ticket.service';
-import {BookingRequest, CancelBookingRequest} from 'src/types/booking';
+import {
+  BookingRequest,
+  CancelBookingRequest,
+  TicketBooking,
+} from 'src/types/booking';
 import {z} from 'zod';
 
-export const bookingEndpoint = authReqEndpointsFactory.build({
+export const addNewBookingEndpoint = authReqEndpointsFactory.build({
   tag: 'booking',
   method: 'post',
   input: BookingRequest,
@@ -19,7 +28,7 @@ export const bookingEndpoint = authReqEndpointsFactory.build({
     ticketBookingId: z.number().nullable(),
     userId: z.string(),
     createdAt: z.date(),
-    status: z.enum(['SUCCESS', 'FAILED', 'QUEUED', 'IN_PROCESS']),
+    status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
     ticketBooking: z
       .object({
         id: z.number(),
@@ -57,7 +66,7 @@ export const bookingEndpoint = authReqEndpointsFactory.build({
       const result = await addNewBooking({
         ticketBookingId: ticketBooking.id,
         userId,
-        status: 'QUEUED',
+        status: 'PROCESSED',
       });
 
       return {
@@ -76,7 +85,13 @@ export const cancelBookingEndpoint = authReqEndpointsFactory.build({
     message: z.string(),
   }),
   async handler({input}) {
-    const CancelBookingResponse = await cancelBookingRequest(input.id);
+    const ticketBookingId = await getTicketBookingId(input.id);
+
+    if (ticketBookingId === null) {
+      throw createHttpError(404, 'Booking not found');
+    }
+
+    const CancelBookingResponse = await cancelBookingRequest(ticketBookingId);
 
     if (CancelBookingResponse === null) {
       return {
@@ -85,6 +100,7 @@ export const cancelBookingEndpoint = authReqEndpointsFactory.build({
     }
 
     if (CancelBookingResponse.message === 'Ok') {
+      updateBookingStatus(input.id, 'CANCELLED');
       return {
         message: 'Booking cancelled',
       };
@@ -130,5 +146,61 @@ export const getBookingInfoEndpoint = authReqEndpointsFactory.build({
         pdfUrl: pdfUrl,
       };
     }
+  },
+});
+
+export const getAllUserBookingsEndpoint = authReqEndpointsFactory.build({
+  tag: 'booking',
+  method: 'get',
+  input: z.object({}),
+  output: z.object({
+    bookings: z.array(
+      z.object({
+        id: z.number(),
+        ticketBookingId: z.number().nullable(),
+        userId: z.string(),
+        createdAt: z.date(),
+        status: z.enum(['SUCCESS', 'FAILED', 'PROCESSED', 'CANCELLED']),
+      })
+    ),
+  }),
+  async handler({options: {user}}) {
+    const bookings = await getAllUserBookings(user.id);
+    if (!bookings) {
+      throw createHttpError(404, 'Booking not found');
+    }
+
+    for (let i = 0; i < bookings.length; i++) {
+      if (
+        bookings[i].status === 'CANCELLED' ||
+        bookings[i].status === 'FAILED' ||
+        bookings[i].status === 'SUCCESS'
+      ) {
+        continue;
+      }
+      const ticketBookingId = bookings[i].ticketBookingId;
+      if (ticketBookingId === null) {
+        bookings[i].status = 'FAILED';
+      } else {
+        const ticketBooking = await getBookingInfoRequest(ticketBookingId);
+        if (!ticketBooking) {
+          bookings[i].status = 'FAILED';
+        } else {
+          const status = ticketBooking.status;
+          if (status === 'Success') {
+            bookings[i].status = 'SUCCESS';
+          } else if (status === 'Failed') {
+            bookings[i].status = 'FAILED';
+          } else {
+            bookings[i].status = 'PROCESSED';
+          }
+          updateBookingStatus(bookings[i].id, bookings[i].status);
+        }
+      }
+    }
+
+    return {
+      bookings,
+    };
   },
 });
